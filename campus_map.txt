@@ -1,0 +1,13 @@
+12 14
+P R R B C L X R X R L X C R
+C B R R R R R C C R C R P L
+P C B R B C R R X R P B R R
+R R X R R R B R B R C R R X
+B C R B R C R L L B C R P R
+R L R X R R R R B R B L B R
+B B R L R P P L R C L R C X
+R R B B R L P C R P R X X R
+R R R B R R R C P R R L C B
+L B R R R R X C C R X C B C
+B B R R C C R X R R R L R P
+B C R B B C B C R C R P P R
