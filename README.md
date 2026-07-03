@@ -10,7 +10,7 @@
 
 ## Milestone 1 Status
 
-This submission covers the **Milestone 1 requirements**:
+This submission covers the **Final requirements**:
 - Campus map loading
 - Map display
 - Linked list student insertion
@@ -23,13 +23,13 @@ This submission covers the **Milestone 1 requirements**:
 ## Compilation
 
 ```bash
-g++ main.cpp CampusMap.cpp StudentList.cpp FileManager.cpp -o project
+g++ main.cpp CampusMap.cpp FileManager.cpp StudentList.cpp QueueSystem.cpp -o my_program
 ```
 
 or simply:
 
 ```bash
-g++ *.cpp -o project
+g++ *.cpp -o my_program
 ```
 
 Requires a C++11-capable compiler (g++, clang++).
@@ -39,7 +39,7 @@ Requires a C++11-capable compiler (g++, clang++).
 ## Execution
 
 ```bash
-./project
+./my_program
 ```
 
 You will be prompted to enter the campus map filename at startup (e.g. `campus_map.txt`). No filenames are hardcoded.
