@@ -4,135 +4,92 @@
 
 using namespace std;
 
-CampusMap::CampusMap()
-{
+CampusMap::CampusMap() {
     rows = 0;
     cols = 0;
 }
 
-bool CampusMap::loadMap(string filename)
-{
+bool CampusMap::loadMap(string filename) {
     ifstream file(filename);
 
-    if (!file)
-    {
-        cout << "Could not open map file." << endl;
+    if (!file) {
+        cout << "Could not open map file.\n";
         return false;
     }
 
     file >> rows >> cols;
     map.clear();
 
-    for (int i = 0; i < rows; i++)
-    {
-        vector<char> rowData;
-
-        for (int j = 0; j < cols; j++)
-        {
-            char spot;
-            file >> spot;
-            rowData.push_back(spot);
+    for (int i = 0; i < rows; i++) {
+        vector<char> row;
+        for (int j = 0; j < cols; j++) {
+            char c;
+            file >> c;
+            row.push_back(c);
         }
-
-        map.push_back(rowData);
+        map.push_back(row);
     }
 
-    file.close();
     return true;
 }
 
-void CampusMap::displayMap()
-{
-    cout << "Campus Map:" << endl;
-
-    for (int i = 0; i < map.size(); i++)
-    {
-        for (int j = 0; j < map[i].size(); j++)
-        {
-            cout << map[i][j] << " ";
+void CampusMap::displayMap() {
+    for (auto &row : map) {
+        for (char c : row) {
+            cout << c << " ";
         }
         cout << endl;
     }
 }
 
-char CampusMap::getLocation(int row, int col)
-{
-    if (row < 0 || row >= rows || col < 0 || col >= cols)
-    {
-        return '\0';
+char CampusMap::getLocation(int r, int c) {
+    if (r < 0 || r >= rows || c < 0 || c >= cols) return '\0';
+    return map[r][c];
+}
+
+string CampusMap::getLocationType(int r, int c) {
+    char x = getLocation(r, c);
+
+    switch (x) {
+        case 'R': return "Road";
+        case 'B': return "Building";
+        case 'C': return "Classroom";
+        case 'L': return "Library";
+        case 'P': return "Parking";
+        case 'X': return "Blocked";
+        default: return "Invalid";
     }
-
-    return map[row][col];
 }
 
-string CampusMap::getLocationType(int row, int col)
-{
-    char place = getLocation(row, col);
-
-    if (place == 'R')
-        return "Road";
-    else if (place == 'B')
-        return "Building";
-    else if (place == 'C')
-        return "Classroom";
-    else if (place == 'L')
-        return "Library";
-    else if (place == 'P')
-        return "Parking Lot";
-    else if (place == 'X')
-        return "Blocked Area";
-    else
-        return "Invalid Location";
+bool CampusMap::isBlocked(int r, int c) {
+    return getLocation(r, c) == 'X';
 }
 
-bool CampusMap::isBlocked(int row, int col)
-{
-    return getLocation(row, col) == 'X';
+void CampusMap::displayNeighbors(int r, int c) {
+    cout << "Up: " << getLocationType(r - 1, c) << endl;
+    cout << "Down: " << getLocationType(r + 1, c) << endl;
+    cout << "Left: " << getLocationType(r, c - 1) << endl;
+    cout << "Right: " << getLocationType(r, c + 1) << endl;
 }
 
-void CampusMap::displayNeighbors(int row, int col)
-{
-    cout << "Neighboring Locations:" << endl;
+void CampusMap::countObjects() {
+    int r=0,b=0,c=0,l=0,p=0,x=0;
 
-    cout << "Up: " << getLocationType(row - 1, col) << endl;
-    cout << "Down: " << getLocationType(row + 1, col) << endl;
-    cout << "Left: " << getLocationType(row, col - 1) << endl;
-    cout << "Right: " << getLocationType(row, col + 1) << endl;
-}
-
-void CampusMap::countObjects()
-{
-    int roads = 0;
-    int buildings = 0;
-    int classrooms = 0;
-    int libraries = 0;
-    int parkingLots = 0;
-    int blocked = 0;
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            if (map[i][j] == 'R')
-                roads++;
-            else if (map[i][j] == 'B')
-                buildings++;
-            else if (map[i][j] == 'C')
-                classrooms++;
-            else if (map[i][j] == 'L')
-                libraries++;
-            else if (map[i][j] == 'P')
-                parkingLots++;
-            else if (map[i][j] == 'X')
-                blocked++;
+    for (auto &row : map) {
+        for (char ch : row) {
+            if (ch=='R') r++;
+            else if (ch=='B') b++;
+            else if (ch=='C') c++;
+            else if (ch=='L') l++;
+            else if (ch=='P') p++;
+            else if (ch=='X') x++;
         }
     }
 
-    cout << "Map Object Counts:" << endl;
-    cout << "Roads: " << roads << endl;
-    cout << "Buildings: " << buildings << endl;
-    cout << "Classrooms: " << classrooms << endl;
-    cout << "Libraries: " << libraries << endl;
-    cout << "Parking Lots: " << parkingLots << endl;
-    cout << "Blocked Areas: " << blocked << endl;
+    cout << "Roads: " << r << endl;
+    cout << "Buildings: " << b << endl;
+    cout << "Classrooms: " << c << endl;
+    cout << "Libraries: " << l << endl;
+    cout << "Parking: " << p << endl;
+    cout << "Blocked: " << x << endl;
 }

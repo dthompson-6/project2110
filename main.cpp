@@ -1,6 +1,7 @@
 #include "CampusMap.h"
 #include "StudentList.h"
 #include "Filemanager.h"
+#include "QueueSystem.h"
 
 #include <iostream>
 #include <string>
@@ -8,7 +9,7 @@
 
 using namespace std;
 
-//---
+// ───────────────────────── Helpers ─────────────────────────
 
 void clearInput() {
     cin.clear();
@@ -16,20 +17,20 @@ void clearInput() {
 }
 
 int getInt(const string& prompt) {
-    int val;
+    int x;
     while (true) {
         cout << prompt;
-        if (cin >> val) { clearInput(); return val; }
-        cout << "Invalid input. Please enter a number.\n";
+        if (cin >> x) { clearInput(); return x; }
+        cout << "Invalid input.\n";
         clearInput();
     }
 }
 
 float getFloat(const string& prompt) {
-    float val;
+    float x;
     while (true) {
         cout << prompt;
-        if (cin >> val) { clearInput(); return val; }
+        if (cin >> x) { clearInput(); return x; }
         cout << "Invalid input.\n";
         clearInput();
     }
@@ -42,108 +43,202 @@ string getLine(const string& prompt) {
     return s;
 }
 
+// ───────────────────────── Menu ─────────────────────────
+
 void printMenu() {
-    cout << "\n======= Campus Management System (Milestone 1) =======\n"
-         << "1. Display Campus Map\n"
+    cout << "\n========== CAMPUS MANAGEMENT SYSTEM ==========\n"
+         << "0. Choose Files (Map + Students)\n\n"
+
+         << "---- CAMPUS MAP ----\n"
+         << "1. Display Map\n"
          << "2. Explore Location\n"
-         << "3. Add Student\n"
-         << "4. Search Student\n"
-         << "5. Display All Students\n"
-         << "6. Exit\n"
-         << "========================================================\n"
+         << "3. Show Neighbors\n"
+         << "4. Count Campus Objects\n\n"
+
+         << "---- STUDENTS ----\n"
+         << "5. Add Student (Save to File)\n"
+         << "6. Remove Student\n"
+         << "7. Search Student\n"
+         << "8. Display All Students\n"
+         << "9. Sort Students by ID\n\n"
+
+         << "---- ADVISOR QUEUE ----\n"
+         << "10. Add Advising Request\n"
+         << "11. Process Request\n"
+         << "12. Display Queue\n\n"
+
+         << "---- SYSTEM ----\n"
+         << "13. Load Students Again\n"
+         << "14. Campus Statistics\n"
+         << "15. Exit\n"
+         << "=============================================\n"
          << "Choice: ";
 }
 
-// main
+// ───────────────────────── MAIN ─────────────────────────
 
 int main() {
-    CampusMap   map;
+
+    CampusMap map;
     StudentList students;
+    FileManager fileManager;
+    QueueSystem queue;
 
-    cout << "=== Campus Exploration & Student Resource Management System ===\n\n";
-
-    // load campus map (no hardcoded filename)
-    string mapFile = getLine("Enter campus map filename: ");
-    if (!map.loadMap(mapFile)) {
-        cout << "Warning: continuing without a loaded map.\n";
-    }
+    string mapFile = "";
+    string studentFile = "";
 
     int choice;
+
     do {
         printMenu();
         choice = getInt("");
 
         switch (choice) {
 
-        // 1 – display map
+        // ───── FILE SELECTION ─────
+        case 0: {
+            mapFile = getLine("Enter campus map file: ");
+            if (map.loadMap(mapFile))
+                cout << "Map loaded successfully.\n";
+            else
+                cout << "Failed to load map.\n";
+
+            studentFile = getLine("Enter student file: ");
+            fileManager.loadStudents(studentFile, students);
+
+            cout << "Students loaded.\n";
+            break;
+        }
+
+        // ───── MAP ─────
         case 1:
             map.displayMap();
             break;
 
-        // 2 - explore location
         case 2: {
-            int r = getInt("Enter row: ");
-            int c = getInt("Enter col: ");
+            int r = getInt("Row: ");
+            int c = getInt("Col: ");
 
             char loc = map.getLocation(r, c);
+
             if (loc == '\0') {
                 cout << "Invalid coordinates.\n";
                 break;
             }
 
-            cout << "\nLocation Type: " << map.getLocationType(r, c) << "\n";
+            cout << "Type: " << map.getLocationType(r, c) << endl;
 
-            if (map.isBlocked(r, c)) {
-                cout << "This location is blocked.\n";
-            } else {
+            if (map.isBlocked(r, c))
+                cout << "Location is blocked.\n";
+            else
                 map.displayNeighbors(r, c);
-            }
+
             break;
         }
 
-        // 3 – add student
         case 3: {
-            Student s;
-            s.id    = getInt("Enter student ID: ");
-            s.name  = getLine("Enter name: ");
-            s.major = getLine("Enter major: ");
-            s.gpa   = getFloat("Enter GPA: ");
-            students.addStudent(s);
-            cout << "Student added.\n";
+            int r = getInt("Row: ");
+            int c = getInt("Col: ");
+            map.displayNeighbors(r, c);
             break;
         }
 
-        // 4 – search student
-        case 4: {
-            int id = getInt("Enter student ID to search: ");
-            Student* result = students.searchStudent(id);
-            if (result) {
-                cout << "\nFound:\n"
-                     << "  ID:    " << result->id    << "\n"
-                     << "  Name:  " << result->name  << "\n"
-                     << "  Major: " << result->major << "\n"
-                     << "  GPA:   " << result->gpa   << "\n";
-            } else {
-                cout << "Student ID " << id << " not found.\n";
+        case 4:
+            map.countObjects();
+            break;
+
+        // ───── STUDENTS ─────
+        case 5: {
+            if (studentFile == "") {
+                cout << "Select files first (option 0).\n";
+                break;
             }
+
+            Student s;
+            s.id = getInt("ID: ");
+            s.name = getLine("Name: ");
+            s.major = getLine("Major: ");
+            s.gpa = getFloat("GPA: ");
+
+            students.addStudent(s);
+            fileManager.saveStudent(studentFile, s);
+
+            cout << "Student added & saved.\n";
             break;
         }
 
-        // 5 – display all students
-        case 5:
+        case 6: {
+            int id = getInt("Enter ID to remove: ");
+            students.removeStudent(id);
+            cout << "Student removed.\n";
+            break;
+        }
+
+        case 7: {
+            int id = getInt("Enter ID: ");
+            Student* s = students.searchStudent(id);
+
+            if (s)
+                cout << "ID: " << s->id << "\nName: " << s->name
+                     << "\nMajor: " << s->major << "\nGPA: " << s->gpa << endl;
+            else
+                cout << "Not found.\n";
+
+            break;
+        }
+
+        case 8:
             students.displayStudents();
             break;
 
-        // 6 – exit
-        case 6:
-            cout << "Goodbye!\n";
+        case 9:
+            students.sortByID();
+            cout << "Sorted.\n";
+            break;
+
+        // ───── QUEUE ─────
+        case 10: {
+            Request r;
+            r.studentID = getInt("Student ID: ");
+            r.issue = getLine("Issue: ");
+            queue.addRequest(r);
+            break;
+        }
+
+        case 11:
+            queue.processRequest();
+            break;
+
+        case 12:
+            queue.displayQueue();
+            break;
+
+        // ───── SYSTEM ─────
+        case 13:
+            if (studentFile == "") {
+                cout << "Select files first.\n";
+                break;
+            }
+            fileManager.loadStudents(studentFile, students);
+            cout << "Reloaded students.\n";
+            break;
+
+        case 14:
+            cout << "\n--- CAMPUS STATISTICS ---\n";
+            students.displayStudents();
+            cout << "\nQueue active.\n";
+            map.countObjects();
+            break;
+
+        case 15:
+            cout << "Exiting...\n";
             break;
 
         default:
-            cout << "Invalid choice. Please enter 1-6.\n";
+            cout << "Invalid option.\n";
         }
 
-    } while (choice != 6);
+    } while (choice != 15);
 
     return 0;
 }

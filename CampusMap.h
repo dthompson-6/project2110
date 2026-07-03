@@ -5,8 +5,7 @@
 #include <string>
 using namespace std;
 
-class CampusMap
-{
+class CampusMap {
 private:
     vector<vector<char>> map;
     int rows;

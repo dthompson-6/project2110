@@ -1,35 +1,53 @@
-#include "FileManager.h"
+#include "Filemanager.h"
 #include <fstream>
 #include <iostream>
 
 using namespace std;
 
-bool FileManager::loadCampusMap(const string& filename,
-       vector<vector<char>>& campusMap,
-  int& rows,
-  int& cols)
-{
-    ifstream inputFile(filename);
+bool FileManager::loadStudents(const string& filename, StudentList& list) {
+    ifstream in(filename);
 
-    if (!inputFile.is_open())
-    {
-        cout << "Error: Could not open file." << endl;
+    if (!in) {
+        cout << "Cannot open file.\n";
         return false;
     }
 
-    inputFile >> rows >> cols;
+    Student s;
 
-    campusMap.resize(rows, vector<char>(cols));
-
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < cols; j++)
-        {
-            inputFile >> campusMap[i][j];
-        }
+    while (in >> s.id >> s.name >> s.major >> s.gpa) {
+        list.addStudent(s);
     }
 
-    inputFile.close();
+    return true;
+}
+
+bool FileManager::saveStudent(const string& filename, const Student& s) {
+    ofstream out(filename, ios::app);
+
+    if (!out) return false;
+
+    out << s.id << " " << s.name << " "
+        << s.major << " " << s.gpa << endl;
+
+    return true;
+}
+
+bool FileManager::saveAllStudents(const string& filename, StudentList& list) {
+    ofstream out(filename);
+
+    if (!out) return false;
+
+    Node* cur = list.getHead();
+
+    while (cur) {
+        out << cur->data.id << " "
+            << cur->data.name << " "
+            << cur->data.major << " "
+            << cur->data.gpa << endl;
+
+        cur = cur->next;
+    }
+
     return true;
 }
 

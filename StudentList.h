@@ -3,26 +3,36 @@
 
 #include <string>
 using namespace std;
-struct Student{
-  int id;
-  string name;
-  string major;
-  float gpa;
+
+struct Student {
+    int id;
+    string name;
+    string major;
+    float gpa;
 };
 
-struct Node{
-  Student data;
-  Node* next;
+struct Node {
+    Student data;
+    Node* next;
 };
 
-class StudentList{
-  private:
+class StudentList {
+private:
     Node* head;
 
-    public:
-      StudentList();
-      void addStudent (Student s);
-      Student* searchStudent(int id);
-      void displayStudents();
+public:
+    StudentList();
+
+    void addStudent(Student s);
+    Student* searchStudent(int id);
+    void displayStudents();
+
+    void removeStudent(int id);
+    void sortByID();
+
+    Node* getHead();
+
+    ~StudentList();
 };
+
 #endif
