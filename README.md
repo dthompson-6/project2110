@@ -1,29 +1,76 @@
 # Campus Exploration & Student Resource Management System
 
 ## Group Members
-- Mufaro Ngwenya
-- Dariga Thompson
-- Teesha Talreja
-- Charite Nzambi
+
+* Mufaro Ngwenya
+* Dariga Thompson
+* Teesha Talreja
+* Charite Nzambi
 
 ---
 
-## Milestone 1 Status
+# Project Overview
 
-This submission covers the **Final requirements**:
-- Campus map loading
-- Map display
-- Linked list student insertion
-- Student search
-- Basic menu system
-- Successful multi-file compilation
+The **Campus Exploration & Student Resource Management System** is a modular C++ application that allows users to explore a campus map, manage student records using a linked list, process advising requests using a queue, and analyze campus data. The program follows an object-oriented design with separate classes responsible for map management, student management, file operations, and queue processing.
 
 ---
 
-## Compilation
+# Features Implemented
+
+## Campus Map
+
+* Load a campus map from an input file.
+* Display the campus map.
+* Explore any campus location using row and column coordinates.
+* Identify the type of location.
+* Detect blocked locations.
+* Display neighboring locations (up, down, left, and right).
+* Count campus objects, including:
+
+  * Roads
+  * Buildings
+  * Classrooms
+  * Libraries
+  * Parking Lots
+  * Blocked Areas
+
+## Student Management
+
+* Store student records using a **singly linked list**.
+* Load student records from a file.
+* Add a new student.
+* Save newly added students to the student file.
+* Remove students by ID.
+* Search for students by ID.
+* Display all student records.
+* Sort students by student ID.
+
+## Advising Queue
+
+* Manage advising requests using a **queue (FIFO)**.
+* Add advising requests.
+* Process the next advising request.
+* Display all pending advising requests.
+
+## File Management
+
+* Choose campus map and student record files at runtime.
+* Load campus maps from text files.
+* Load student records from text files.
+* Reload student records without restarting the program.
+
+## Campus Statistics
+
+* Display statistics about the campus map, including counts of each map object.
+
+---
+
+# Compilation
+
+Compile the project using:
 
 ```bash
-g++ main.cpp CampusMap.cpp FileManager.cpp StudentList.cpp QueueSystem.cpp -o my_program
+g++ -std=c++11 main.cpp CampusMap.cpp FileManager.cpp StudentList.cpp QueueSystem.cpp -o my_program
 ```
 
 or simply:
@@ -32,104 +79,226 @@ or simply:
 g++ *.cpp -o my_program
 ```
 
-Requires a C++11-capable compiler (g++, clang++).
+The project requires a C++11 (or newer) compatible compiler such as **g++** or **clang++**.
 
 ---
 
-## Execution
+# Execution
+
+Run the program with:
 
 ```bash
 ./my_program
 ```
 
-You will be prompted to enter the campus map filename at startup (e.g. `campus_map.txt`). No filenames are hardcoded.
+At runtime, choose:
+
+* Campus map file (for example: `campus_map.txt`)
+* Student records file (for example: `students.txt`)
+
+No filenames are hardcoded.
 
 ---
 
-## Input File Formats
+# Input File Formats
 
-### Campus Map (`campus_map.txt`)
-```
+## Campus Map (`campus_map.txt`)
+
+Format:
+
+```text
 <rows> <cols>
-<symbol> <symbol> ...   (one row per line)
+<symbol> <symbol> ...
 ```
 
-**Symbols:**
-    Symbol     Meaning      
-    R          Road         
-    B          Building     
-    C          Classroom    
-    L          Library      
-    P          Parking Lot  
-    X          Blocked Area 
+Example:
 
-### Student Records (`students.txt`)
-Space-separated, one student per line:
+```text
+5 5
+P R R B B
+R R R R B
+L R C C R
+R R R R R
+C C R L R
 ```
+
+### Campus Map Symbols
+
+| Symbol | Meaning      |
+| ------ | ------------ |
+| R      | Road         |
+| B      | Building     |
+| C      | Classroom    |
+| L      | Library      |
+| P      | Parking Lot  |
+| X      | Blocked Area |
+
+---
+
+## Student Records (`students.txt`)
+
+Format:
+
+```text
 id name major gpa
 ```
+
 Example:
+
+```text
+2001 Sophia CS 3.91
+2002 Liam IT 3.42
+2003 Olivia CE 3.78
+2004 Noah CS 2.95
+2005 Ava SE 3.67
+2006 Mason IT 3.11
 ```
-3001 Aiden EE 3.79
-3002 Bella CE 3.60
-```
-*(Note: this milestone adds students interactively through the menu; reading `students.txt` directly into the linked list is part of the file-processing requirement we'll finish for the final submission.)*
 
 ---
 
-## Features Implemented (Milestone 1)
+# Project Structure
 
-- **Campus Map (`CampusMap`)** — loads a map from file into a 2D grid, displays it, identifies location type at given coordinates, detects blocked areas, and shows up/down/left/right neighbors (no diagonal movement)
-- **Student List (`StudentList`)** — singly linked list of `Student` records; supports adding a student and searching by ID
-- **Menu System (`main.cpp`)** — text menu with input validation for all options
-
-## Not Yet Implemented (planned for final submission, due 7/4)
-- Student removal
-- Sorting algorithm (bubble/selection/insertion) and full searching requirement
-- Advising request queue
-- Campus statistics module
-- Loading student records directly from `students.txt` into the linked list (currently `FileManager::loadCampusMap` only loads the map; student file loading still needs to be added and wired into `main.cpp`)
-
----
-
-## File Structure
-
-File                     Responsibility                              
-
-`main.cpp`               Entry point, menu loop, user interaction     
-`CampusMap.h/.cpp`       2D grid map loading, display, exploration    
-`StudentList.h/.cpp`     Linked list of students, add, search         
-`FileManager.h/.cpp`     File I/O helper (map loading)                
-`campus_map.txt`         Sample campus map input                      
-`students.txt`           Sample student records (not yet auto-loaded) 
+| File                 | Responsibility                                           |
+| -------------------- | -------------------------------------------------------- |
+| `main.cpp`           | Program entry point, menu system, and user interaction   |
+| `CampusMap.h/.cpp`   | Campus map loading, display, exploration, and statistics |
+| `StudentList.h/.cpp` | Linked list implementation for student records           |
+| `QueueSystem.h/.cpp` | Queue implementation for advising requests               |
+| `FileManager.h/.cpp` | Loading campus maps and student records from files       |
+| `campus_map.txt`     | Sample campus map input                                  |
+| `students.txt`       | Sample student records                                   |
 
 ---
 
-## Menu Options (Milestone 1)
+# Menu Options
 
 ```
-1. Display Campus Map
+CAMPUS MANAGEMENT SYSTEM 
+0. Choose Files (Map + Students)
+
+---- CAMPUS MAP ----
+1. Display Map
 2. Explore Location
-3. Add Student
-4. Search Student
-5. Display All Students
-6. Exit
+3. Show Neighbors
+4. Count Campus Objects
+
+---- STUDENTS ----
+5. Add Student (Save to File)
+6. Remove Student
+7. Search Student
+8. Display All Students
+9. Sort Students by ID
+
+---- ADVISOR QUEUE ----
+10. Add Advising Request
+11. Process Request
+12. Display Queue
+
+---- SYSTEM ----
+13. Load Students Again
+14. Campus Statistics
+15. Exit
+
 ```
 
 ---
 
-## Known Bugs / Limitations
-- Student records must currently be entered manually through the menu; file-based student loading is not yet wired into `main.cpp`
-- Names/majors with spaces in `students.txt` won't be parsed correctly once file-loading is added, since the file uses space-separated fields — this needs to be addressed before the final submission
-- No duplicate student ID check yet
-- No removal, sorting, or statistics yet (planned for final submission)
-- Other bugs have been fixed
+# Data Structures Used
+
+## Singly Linked List
+
+Used for storing student records.
+
+Operations:
+
+* Add Student
+* Remove Student
+* Search Student
+* Display Students
+* Sort Students
 
 ---
 
-## Data Structures Used So Far
+## Queue (FIFO)
 
-Structure       |   Used For
+Used for managing advising requests.
 
-Linked List        Student records (`StudentList`)
-2D Vector          Campus map grid (`CampusMap`)  
+Operations:
+
+* Enqueue advising request
+* Dequeue advising request
+* Display queue
+
+---
+
+## Two-Dimensional Vector
+
+Used for storing the campus map.
+
+Operations:
+
+* Load map
+* Display map
+* Explore locations
+* Count campus objects
+
+---
+
+# Design Overview
+
+The application is organized into independent modules:
+
+* **CampusMap** handles all campus map functionality.
+* **StudentList** manages student records using a linked list.
+* **QueueSystem** manages advising requests using a FIFO queue.
+* **FileManager** manages reading data from files.
+* **main.cpp** provides the menu interface and coordinates all program components.
+
+---
+
+# Testing
+
+The following functionality has been tested:
+
+* Loading campus maps
+* Loading student records
+* Displaying campus maps
+* Exploring campus locations
+* Displaying neighboring locations
+* Counting campus objects
+* Adding students
+* Removing students
+* Searching for students
+* Displaying student records
+* Sorting students by ID
+* Adding advising requests
+* Processing advising requests
+* Displaying the advising queue
+* Reloading student records
+* Displaying campus statistics
+
+---
+
+# Known Limitations
+
+* Student names and majors must be single words because student records are stored as space-separated values.
+* Duplicate student IDs are not automatically prevented unless checked by the program.
+* The program assumes correctly formatted input files.
+
+---
+
+# Technologies Used
+
+* C++
+* Object-Oriented Programming (OOP)
+* Linked Lists
+* Queues (FIFO)
+* Two-Dimensional Vectors
+* File Input/Output (ifstream / ofstream)
+* Modular Programming
+
+---
+
+# Conclusion
+
+This project demonstrates the implementation of fundamental data structures and algorithms in C++. It combines linked lists, queues, vectors, and file processing within a modular object-oriented design to create an interactive campus management system. The project emphasizes efficient data organization, reusable code, and user-friendly interaction while satisfying the requirements of the Campus Exploration & Student Resource Management System assignment.
