@@ -70,7 +70,7 @@ The **Campus Exploration & Student Resource Management System** is a modular C++
 Compile the project using:
 
 ```bash
-g++ -std=c++11 main.cpp CampusMap.cpp FileManager.cpp StudentList.cpp QueueSystem.cpp -o my_program
+g++ main.cpp CampusMap.cpp FileManager.cpp StudentList.cpp QueueSystem.cpp -o my_program
 ```
 
 or simply:
@@ -301,4 +301,4 @@ The following functionality has been tested:
 
 # Conclusion
 
-This project demonstrates the implementation of fundamental data structures and algorithms in C++. It combines linked lists, queues, vectors, and file processing within a modular object-oriented design to create an interactive campus management system. The project emphasizes efficient data organization, reusable code, and user-friendly interaction while satisfying the requirements of the Campus Exploration & Student Resource Management System assignment.
+This project showcases the implementation of fundamental data structures and algorithms in C++. It integrates linked lists, queues, vectors, and file processing within a modular object-oriented design to create an interactive campus management system. The project focuses on efficient data organization, reusable code, and user-friendly interaction, while meeting the requirements of the Campus Exploration and Student Resource Management System assignment.
